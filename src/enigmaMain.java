@@ -1,8 +1,8 @@
 public class enigmaMain {
     public static void main(String[] args) {
-        Rotor r1 = new Rotor(0, 0);
-        Rotor r2 = new Rotor(0, 1);
-        Rotor r3 = new Rotor(0, 2);
+        Rotor r1 = new Rotor(0, 1);
+        Rotor r2 = new Rotor(0, 2);
+        Rotor r3 = new Rotor(0, 3);
 
         Enigma enigmaMachine = new Enigma(r1, r2, r3);
 

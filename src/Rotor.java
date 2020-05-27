@@ -1,11 +1,9 @@
 public class Rotor {
 
     // Current rotor position
-    private int mPosition = 0;
+    private int mPosition;
     // Preset rotor number
     private int mRotorNumber;
-    // Initial rotor position
-    private int mRotorPosition;
     // Rotor's cypher directly corresponding to 'alphabet'
     private String cypher;
     // String containing the characters which trigger the next rotor to advance
@@ -19,11 +17,11 @@ public class Rotor {
      * @param rotorNumber Which rotor to choose
      */
     public Rotor(int rotorPosition, int rotorNumber) {
-        mRotorPosition = rotorPosition;
+        mPosition = rotorPosition;
         mRotorNumber = rotorNumber;
 
         // Pick the preset rotor and set the cypher and turnover strings
-        switch (rotorNumber) {
+        switch (mRotorNumber) {
             case 1:
                 cypher = "EKMFLGDQVZNTOWYHXUSPAIBRCJ";
                 turnover = "Q";
@@ -60,30 +58,62 @@ public class Rotor {
     }
 
     /**
-     * Get corresponding cypher letter
-     * @param letter Original letter
+     * Get rotor's cypher letter at some position
+     * @param letterPosition Position of cypher letter to get
      * @return Cypher equivalent
      */
-    public Character getCypherLetter(Character letter) {
-        int iPosition = 0;
-        for (int i = 0; i < alphabet.length(); i++) {
-            if (alphabet.charAt(i) == letter) {
-                iPosition = i;
-                break;
-            }
-        }
-        return cypher.charAt(iPosition);
+    public Character getCypherLetterAtPosition(int letterPosition) {
+        return cypher.charAt(letterPosition);
+    }
+
+    /**
+     * Get output position of an input position for the rotor
+     * @param inputPosition Input signal position
+     * @return Output signal position
+     */
+    public Integer encodePosition(int inputPosition) {
+        int inputSignalPosition = inputPosition + mPosition;
+        int outputLetter = cypher.charAt(inputSignalPosition);
+
+        return alphabet.indexOf(outputLetter);
+    }
+
+    /**
+     * Get output position of an input position for the rotor in reverse
+     * @param inputPosition Input signal position
+     * @return Output signal position
+     */
+    public Integer encodePositionReverse(int inputPosition) {
+        int inputSignalPosition = inputPosition + mPosition;
+        int outputLetter = alphabet.charAt(inputSignalPosition);
+
+        return cypher.indexOf(outputLetter);
     }
 
     /**
      * Rotate the rotor (increase position by one)
      * Note: 26=0
+     * @return If the next rotor will rotate
      */
-    public void rotate() {
+    public boolean rotate() {
+        // Check if current position is a turnover position
+        boolean nextRotate = false;
+        for (char turnoverChar : turnover.toCharArray()) {
+            if (mPosition == alphabet.indexOf(turnoverChar)) {
+                nextRotate = true;
+            }
+        }
+
+        // Increase position
         mPosition++;
         if (mPosition == 26) {
             mPosition = 0;
         }
+
+        cypher = cypher.substring(1) + cypher.charAt(0);
+
+        // Return if next rotor is rotated
+        return nextRotate;
     }
 
     /**

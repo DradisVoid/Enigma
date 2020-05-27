@@ -30,13 +30,39 @@ public class Enigma {
      * @return The encoded letter
      */
     public Character encodeLetter(Character letter) {
-        // Store original letter
-        Character encodedLetter = letter;
+        System.out.println(letter);
+        int encodedLetterPosition = alphabet.indexOf(letter);
 
-        encodedLetter = rotor1.getCypherLetter(encodedLetter);
-        encodedLetter = rotor2.getCypherLetter(encodedLetter);
-        encodedLetter = rotor3.getCypherLetter(encodedLetter);
+        // Rotate rotors before encoding
+        if (rotor3.rotate()) {
+            if (rotor2.rotate()) {
+                rotor1.rotate();
+            }
+        }
 
-        return encodedLetter;
+        System.out.println(alphabet.charAt(rotor1.getPosition()) + " " +
+                alphabet.charAt(rotor2.getPosition()) + " " + alphabet.charAt(rotor3.getPosition()));
+
+        System.out.println(rotor3.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor3.encodePosition(encodedLetterPosition);
+
+        System.out.println(rotor2.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor2.encodePosition(encodedLetterPosition);
+
+        System.out.println(rotor1.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor1.encodePosition(encodedLetterPosition);
+
+        //encodedLetterPosition = reflector.reflect(encodedLetterPosition);
+/*
+        System.out.println(rotor1.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor1.encodePositionReverse(encodedLetterPosition);
+
+        System.out.println(rotor2.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor2.encodePositionReverse(encodedLetterPosition);
+
+        System.out.println(rotor3.getCypherLetterAtPosition(encodedLetterPosition));
+        encodedLetterPosition = rotor3.encodePositionReverse(encodedLetterPosition);
+*/
+        return alphabet.charAt(encodedLetterPosition);
     }
 }
